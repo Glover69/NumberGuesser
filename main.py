@@ -33,24 +33,27 @@ network = network.Network()
 print(len(x_train))
 
 train_steps = 0
+epoch_num = 5
 
-for index, img in enumerate(x_train):
-    # we get the first prediction in
-    prediction = network.forward(img)
+for e, epoch in enumerate(range(epoch_num)):
+    print(f"-------EPOCH {e}--------")
+    for index, img in enumerate(x_train):
+        # we get the first prediction in
+        prediction = network.forward(img)
 
-    # we then get our loss w the cost function
-    loss = network.get_loss(y_train[index])
+        # we then get our loss w the cost function
+        loss = network.get_loss(y_train[index])
 
-    # Then we run our backprop logic, update the weights and move on to the next img
-    network.backward_prop(img)
+        # Then we run our backprop logic, update the weights and move on to the next img
+        network.backward_prop(img)
 
-    if train_steps % 1000 == 0:
-        correct = 0
-        for index2, i in enumerate(x_test):
-            prediction = network.forward(i)
-            if np.argmax(prediction) == y_test[index2]:
-                correct += 1
+        if train_steps % 1000 == 0:
+            correct = 0
+            for index2, i in enumerate(x_test):
+                prediction = network.forward(i)
+                if np.argmax(prediction) == y_test[index2]:
+                    correct += 1
 
-    print(f"print accuracy: {correct}/{len(x_test)}")
-    train_steps += 1
+            print(f"print accuracy: {correct}/{len(x_test)}")
+        train_steps += 1
 

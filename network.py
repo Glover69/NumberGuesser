@@ -16,15 +16,15 @@ class Network(object):
 
         self.one_hot = None
 
-        self.w1 = np.random.uniform(-1, 1, (784, 16))
-        self.w2 = np.random.uniform(-1, 1, (16, 16))
-        self.w3 = np.random.uniform(-1, 1, (16, 10))
+        self.w1 = np.random.uniform(-1, 1, (784, 128))
+        self.w2 = np.random.uniform(-1, 1, (128, 128))
+        self.w3 = np.random.uniform(-1, 1, (128, 10))
 
-        self.b1 = np.random.uniform(-1, 1, 16)
-        self.b2 = np.random.uniform(-1, 1, 16)
+        self.b1 = np.random.uniform(-1, 1, 128)
+        self.b2 = np.random.uniform(-1, 1, 128)
         self.b3 = np.random.uniform(-1, 1, 10)
 
-        self.lr = 0.001
+        self.lr = 0.0001
 
     def forward(self, neurons):
         neurons = neurons.flatten()
@@ -78,13 +78,15 @@ class Network(object):
 
         dl_da3 = self.a3 - self.one_hot
         dl_dw3 = calc_weight(dl_da3, self.a2)
+        dl_db3 = dl_da3
 
         dl_da2 = calc_activation(dl_da3, self.w3)
         dl_dw2 = calc_weight(dl_da2, self.a1)
+        dl_db2 = dl_da2
 
         dl_da1= calc_activation(dl_da2, self.w2)
-
         dl_dw1 = calc_weight(dl_da1, x)
+        dl_db1 = dl_da1
 
         # update each weight
         self.w3 = self.w3 - (self.lr * dl_dw3)
@@ -92,7 +94,9 @@ class Network(object):
         self.w1 = self.w1 - (self.lr * dl_dw1)
 
         # update each bias
-
+        self.b1 = self.b1 - self.lr * dl_db1
+        self.b2 = self.b2 - self.lr * dl_db2
+        self.b3 = self.b3 - self.lr * dl_db3
 
 
 
