@@ -25,6 +25,9 @@ mnist_dataloader = MnistDataloader(training_images_filepath, training_labels_fil
 # converting the images from (0 - 255) to (0 - 1) for our activations in the N.N
 x_train = np.array(x_train) / 255.0
 x_test = np.array(x_test) / 255.0
+y_train = np.array(y_train)
+y_test = np.array(y_test)
+
 
 
 # now we run the training loop
@@ -36,7 +39,12 @@ train_steps = 0
 epoch_num = 5
 
 for e, epoch in enumerate(range(epoch_num)):
-    print(f"-------EPOCH {e}--------")
+    print(f"-------EPOCH {e + 1}--------")
+    indices = np.arange(len(x_train))
+    np.random.shuffle(indices)
+    x_train = x_train[indices]
+    y_train = y_train[indices]
+
     for index, img in enumerate(x_train):
         # we get the first prediction in
         prediction = network.forward(img)

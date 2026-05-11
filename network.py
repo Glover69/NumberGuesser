@@ -24,7 +24,7 @@ class Network(object):
         self.b2 = np.random.uniform(-1, 1, 128)
         self.b3 = np.random.uniform(-1, 1, 10)
 
-        self.lr = 0.0001
+        self.lr = 0.001
 
     def forward(self, neurons):
         neurons = neurons.flatten()
