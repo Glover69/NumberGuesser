@@ -65,5 +65,24 @@ class Network(object):
         return mse
 
 
+    def backward_prop(self, x):
+
+        def calc_weight(dl_da, activation):
+            return np.dot(activation.T, dl_da)
+
+        def calc_activation(dl_da, weights):
+            return np.dot(dl_da, weights.T)
+
+        dl_da3 = self.a3 - self.one_hot
+        dl_dw3 = calc_weight(dl_da3, self.a2)
+
+        dl_da2 = calc_activation(dl_da3, self.w3)
+        dl_dw2 = calc_weight(dl_da2, self.a1)
+
+        dl_da1= calc_activation(dl_da2, self.w2)
+
+        dl_dw1 = calc_weight(dl_da1, x)
+
+
 
 
