@@ -16,7 +16,7 @@ class Network(object):
 
         self.one_hot = None
 
-        self.w1 = np.random.uniform(-1, 1, (748, 16))
+        self.w1 = np.random.uniform(-1, 1, (784, 16))
         self.w2 = np.random.uniform(-1, 1, (16, 16))
         self.w3 = np.random.uniform(-1, 1, (16, 10))
 
@@ -24,9 +24,10 @@ class Network(object):
         self.b2 = np.random.uniform(-1, 1, 16)
         self.b3 = np.random.uniform(-1, 1, 10)
 
-        self.lr = 0.01
+        self.lr = 0.001
 
     def forward(self, neurons):
+        neurons = neurons.flatten()
         # multiply the weights by the inputs, plus the bias, then sum them all up
         self.z1 = np.dot(neurons, self.w1) + self.b1
         self.a1 = np.maximum(0, self.z1)
@@ -41,6 +42,8 @@ class Network(object):
 
         def softmax(x):
             # Subtracting the max (numerical stability)
+            x = np.nan_to_num(x)
+
             e_x = np.exp(x - np.max(x))
             return e_x / e_x.sum(axis=0)
 
@@ -68,7 +71,7 @@ class Network(object):
     def backward_prop(self, x):
 
         def calc_weight(dl_da, activation):
-            return np.dot(activation.T, dl_da)
+            return np.dot(activation.reshape(-1, 1), dl_da.reshape(1, -1))
 
         def calc_activation(dl_da, weights):
             return np.dot(dl_da, weights.T)
@@ -82,6 +85,15 @@ class Network(object):
         dl_da1= calc_activation(dl_da2, self.w2)
 
         dl_dw1 = calc_weight(dl_da1, x)
+
+        # update each weight
+        self.w3 = self.w3 - (self.lr * dl_dw3)
+        self.w2 = self.w2 - (self.lr * dl_dw2)
+        self.w1 = self.w1 - (self.lr * dl_dw1)
+
+        # update each bias
+
+
 
 
 

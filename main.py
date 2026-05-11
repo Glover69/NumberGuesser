@@ -3,7 +3,10 @@ import random
 from typing import Any
 
 import matplotlib.pyplot as plt
+import numpy as np
+from numpy.ma.core import argmax
 
+import network
 from data.data_loader import MnistDataloader
 
 
@@ -13,24 +16,6 @@ test_images_filepath = './data/val/t10k-images.idx3-ubyte'
 test_labels_filepath = './data/val/t10k-labels.idx1-ubyte'
 
 #
-# Helper function to show a list of images with their relating titles
-#
-def show_images(images, title_texts):
-    cols = 5
-    rows = int(len(images)/cols) + 1
-    plt.figure(figsize=(30,20))
-    index = 1
-    for x in zip(images, title_texts):
-        image = x[0]
-        title_text = x[1]
-        plt.subplot(rows, cols, index)
-        plt.imshow(image, cmap=plt.cm.gray)
-        if title_text != '':
-            plt.title(title_text, fontsize = 15);
-            print(title_text)
-        index += 1
-
-#
 # Load MINST dataset
 #
 mnist_dataloader = MnistDataloader(training_images_filepath, training_labels_filepath, test_images_filepath, test_labels_filepath)
@@ -38,13 +23,34 @@ mnist_dataloader = MnistDataloader(training_images_filepath, training_labels_fil
 
 
 # converting the images from (0 - 255) to (0 - 1) for our activations in the N.N
-train_nn = []
-test_nn = []
+x_train = np.array(x_train) / 255.0
+x_test = np.array(x_test) / 255.0
 
-for x in range(len(x_train)):
-    x_train[x] = x_train[x]/255
-    train_nn.append(x_train[x])
 
-for x in range(len(x_test)):
-    x_test[x] = x_test[x]/255
-    test_nn.append(x_test[x])
+# now we run the training loop
+network = network.Network()
+
+print(len(x_train))
+
+train_steps = 0
+
+for index, img in enumerate(x_train):
+    # we get the first prediction in
+    prediction = network.forward(img)
+
+    # we then get our loss w the cost function
+    loss = network.get_loss(y_train[index])
+
+    # Then we run our backprop logic, update the weights and move on to the next img
+    network.backward_prop(img)
+
+    if train_steps % 1000 == 0:
+        correct = 0
+        for index2, i in enumerate(x_test):
+            prediction = network.forward(i)
+            if np.argmax(prediction) == y_test[index2]:
+                correct += 1
+
+    print(f"print accuracy: {correct}/{len(x_test)}")
+    train_steps += 1
+
