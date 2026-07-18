@@ -1,7 +1,24 @@
+from pathlib import Path
+
 import numpy as np # linear algebra
 import struct
 from array import array
+from PIL import Image
 
+
+def read_from_folder(directory: str):
+    images = []
+    labels = []
+
+    for image in Path(directory).glob("*.jpg"):
+        label = int(image.stem.split("_")[0])
+        _img = Image.open(image).convert('L')
+
+        pixels = np.array(_img)
+        images.append(pixels)
+        labels.append(label)
+
+    return images, labels
 
 def read_images_labels(images_filepath, labels_filepath):
     labels = []
@@ -40,3 +57,11 @@ class MnistDataloader(object):
         x_train, y_train = read_images_labels(self.training_images_filepath, self.training_labels_filepath)
         x_test, y_test = read_images_labels(self.test_images_filepath, self.test_labels_filepath)
         return (x_train, y_train) ,(x_test, y_test)
+
+
+
+class DataLoader(object):
+    def load_data(self):
+        x_train, y_train = read_from_folder("/Users/danielglover/Python/Forge/output/train")
+        x_test, y_test = read_from_folder("/Users/danielglover/Python/Forge/output/val")
+        return (x_train, y_train), (x_test, y_test)

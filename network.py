@@ -1,5 +1,6 @@
 import numpy as np
 
+
 # Networks starts off by doing a forward pass of the first input to get the initial activations
 # and results. When it starts, our activations and raw sums are null. They're then given values after the forward run
 # which is updated after each pass, together with the weights. That's how the training/learning occurs
@@ -24,7 +25,7 @@ class Network(object):
         self.b2 = np.random.uniform(-1, 1, 128)
         self.b3 = np.random.uniform(-1, 1, 10)
 
-        self.lr = 0.001
+        self.lr = 0.0001
 
     def forward(self, neurons):
         neurons = neurons.flatten()
@@ -51,8 +52,6 @@ class Network(object):
 
         return self.a3
 
-
-
     # Takes in the prediction from the forward pass, and outputs a single number
     # using the loss function (Mean Squared Error) to find the average squared
     # difference between the predicted values and the actual values
@@ -67,9 +66,7 @@ class Network(object):
 
         return mse
 
-
     def backward_prop(self, x):
-
         def calc_weight(dl_da, activation):
             return np.dot(activation.reshape(-1, 1), dl_da.reshape(1, -1))
 
@@ -84,7 +81,7 @@ class Network(object):
         dl_dw2 = calc_weight(dl_da2, self.a1)
         dl_db2 = dl_da2
 
-        dl_da1= calc_activation(dl_da2, self.w2)
+        dl_da1 = calc_activation(dl_da2, self.w2)
         dl_dw1 = calc_weight(dl_da1, x)
         dl_db1 = dl_da1
 
@@ -97,8 +94,3 @@ class Network(object):
         self.b1 = self.b1 - self.lr * dl_db1
         self.b2 = self.b2 - self.lr * dl_db2
         self.b3 = self.b3 - self.lr * dl_db3
-
-
-
-
-
