@@ -110,4 +110,4 @@ All further experiments will be on separate branches, with the core implementati
 - [ ] Test with custom handwritten digits
 - [ ] Experiment with deeper architectures
 - [ ] Implement proper weight initialisation (Xavier/He)
-- [ ] Rebuild in PyTorch
+- [ ] Rebuild in PyTorch (Done, available in `pytorch-implementation` branch)
